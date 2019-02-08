@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Assinatura digital de documentos</title>
+  	<link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/ttlv.js" type="text/javascript"></script>
+    <script src="js/enums.js" type="text/javascript"></script>
+	</head>
+	
+<body>
+    <div class="jumbotron">
+      <div class="container">
+      	<br />
+        <h1>Assinatura digital de documentos</h1>
+        <p>
+        	Escolha o documento que você deseja assinar:
+        </p>
+        
+        <input type="file" id="input_file" title="Clique aqui" />
+
+      <br /> <br />       
+      <p> <a class="btn btn-primary btn-lg" onclick="Sign()" role="button"> Assinar &raquo;</a> </p>
+      </div>
+    </div>
+
+    <div class="container">     
+      <footer>
+        <p>&copy; Trabalho de Conclusão de Curso desenvolvido por Felipe Rodrigues Luiz em 2018</p>
+      </footer>
+    </div> 
+    
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/controller.js" type="text/javascript"></script>
+
+	</body>
+	
+</html>
