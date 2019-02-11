@@ -16,18 +16,18 @@ cliente.setRequestHeader("Content-Type", "application/octet-stream");
 
 //criar TTLV
 
-var TTLVRequest = new KMIPTTLV (tags.REQUEST_MESSAGE, types.STRUCTURE, '', 0x000001e8);
+var TTLVRequest = new KMIPTTLV (Tags.REQUEST_MESSAGE, Types.STRUCTURE, '', 0x000001e8);
 // //Header Section
-var TTLVHeader = new ttlv (tags.REQUEST_HEADER, types.STRUCTURE, '', 0x00000038);
-var TTLVProtocol = new ttlv (tags.PROTOCOL_VERSION, types.STRUCTURE, '', 0x00000020);
-var TTLVProtocolMajor = new ttlv (tags.PROTOCOL_VERSION_MAJOR, types.INTEGER, 0x00000001, 0x00000004);
-var TTLVProtocolMinor = new ttlv (tags.PROTOCOL_VERSION_MINOR, types.INTEGER, 0x00000004, 0x00000004);
-var TTLVHeaderBatch = new ttlv (tags.BATCH_COUNT, types.INTEGER, 0x00000001, 0x00000004);
+var TTLVHeader = new KMIPTTLV (Tags.REQUEST_HEADER, Types.STRUCTURE, '', 0x00000038);
+var TTLVProtocol = new KMIPTTLV (Tags.PROTOCOL_VERSION, Types.STRUCTURE, '', 0x00000020);
+var TTLVProtocolMajor = new KMIPTTLV (Tags.PROTOCOL_VERSION_MAJOR, Types.INTEGER, 0x00000001, 0x00000004);
+var TTLVProtocolMinor = new KMIPTTLV (Tags.PROTOCOL_VERSION_MINOR, Types.INTEGER, 0x00000004, 0x00000004);
+var TTLVHeaderBatch = new KMIPTTLV (Tags.BATCH_COUNT, Types.INTEGER, 0x00000001, 0x00000004);
 //Batch Items
-var TTLVBatchItem = new ttlv (tags.BATCH_ITEM, types.STRUCTURE, '', 0x000001a0);
-var TTLVItemOperation = new ttlv (tags.OPERATION, types.ENUMERATION, operation.QUERY, 0x00000004);
-var TTLVRequestPayload = new ttlv (tags.REQUEST_PAYLOAD, types.STRUCTURE, '', 0x00000188)
-var TTLVQueryFunction = new ttlv (tags.QUERY_FUNCTION, types.ENUMERATION, operation.QUERY_PROFILES, 0x00000004)
+var TTLVBatchItem = new KMIPTTLV (Tags.BATCH_ITEM, Types.STRUCTURE, '', 0x000001a0);
+var TTLVItemOperation = new KMIPTTLV (Tags.OPERATION, Types.ENUMERATION, Operation.QUERY, 0x00000004);
+var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, '', 0x00000188)
+var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Operation.QUERY_PROFILES, 0x00000004)
 
 
 var request = {}; //enviar um binario

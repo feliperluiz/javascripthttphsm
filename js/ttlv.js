@@ -20,15 +20,15 @@ function formatValues(value, type) {
 	var tmpStr = '';
 	var tmpLen = getFieldLength(type, value);
 	switch(type) {
-		case objects.Types.INTEGER:
+		case Types.INTEGER:
 			var IntFill = '00000000';
 			tmpStr = (IntFill + value.toString(16)).substr(-8);
 			return tmpStr;
-		case objects.Types.ENUMERATION:
+		case Types.ENUMERATION:
 			var enumFill = '00000000'; 
 			tmpStr = (enumFill + value.toString(16)).substr(-8);
 			return tmpStr;
-		case objects.Types.TEXT_STRING:
+		case Types.TEXT_STRING:
 			if (!isHex(value)) {
 				var hexbuf = new Buffer(value);
 				tmpStr = hexbuf.toString('hex');
@@ -45,16 +45,16 @@ function formatValues(value, type) {
 function ttlvPadding(type, value) {
 	var pad;
 	switch(type) {
-		case objects.Types.INTEGER:
+		case Types.INTEGER:
 			pad = '00000000';
 			return pad;
-		case objects.Types.INTERVAL:
+		case Types.INTERVAL:
 			pad = '00000000';
 			return pad;
-		case objects.Types.ENUMERATION:
+		case Types.ENUMERATION:
 			pad = '00000000';
 			return pad;
-		case objects.Types.TEXT_STRING:
+		case Types.TEXT_STRING:
 		if (isMultiple(getByteLen(value), 8)) {
 			pad = '';
 		} else {
@@ -65,7 +65,7 @@ function ttlvPadding(type, value) {
 		}
 		return pad;
 
-		case objects.Types.BYTE_STRING:
+		case Types.BYTE_STRING:
 			return pad;
 		default:
 			pad = '';
@@ -76,29 +76,29 @@ function ttlvPadding(type, value) {
 function getFieldLength(type, value) {
 	var remainder, length;
 	switch(type) {
-		case objects.Types.STRUCTURE:
+		case Types.STRUCTURE:
 			if (value) {
 				var tmpLen = getByteLen(value);
 				return tmpLen.toString(16);
 			}
-		case objects.Types.INTEGER:
+		case Types.INTEGER:
 			return 4;
-		case objects.Types.LONG_INTEGER:
+		case Types.LONG_INTEGER:
 			return 8;
-		case objects.Types.BIG_INTEGER:
-		case objects.Types.ENUMERATION:
+		case Types.BIG_INTEGER:
+		case Types.ENUMERATION:
 			return 4;
-		case objects.Types.BOOLEAN:
+		case Types.BOOLEAN:
 			return 8;
-		case objects.Types.TEXT_STRING:
+		case Types.TEXT_STRING:
 		if (value) {
 			var tmpLen = value.length/2;
 			return parseInt(tmpLen.toString(16));
 		}
-		case objects.Types.BYTE_STRING:
-		case objects.Types.DATE_TIME:
+		case Types.BYTE_STRING:
+		case Types.DATE_TIME:
 			return 8;
-		case objects.Types.INTERVAL:
+		case Types.INTERVAL:
 			return 4;
 		default:
 			return 4;
@@ -121,9 +121,8 @@ function formatNumbers(number, type) {
 		throw new Error('Unknown type.');
 	}
 
-	var tmpStr = basenum.slice(number.toString().length) + '' + number;
+	number = "" + number;
+	var tmpStr = basenum.slice(number.length) + '' + number;
 
 	return tmpStr;
 };
-
-export let ttlv = KMIPTTLV;

@@ -1,57 +1,5 @@
-var log = console.log;
-function defineEnumProperty(ctx) {
-  return (prop, value) => {
-    Object.defineProperty(ctx, prop, {
-      configurable: false,
-      writable: false,
-      enumerable: true,
-      value: value
-    });
-  }
-}
-
-
-
-function Tags() {
-  return Tags;
-}
-
-Object.defineProperty(Tags, 'MONDAY', {
-  configurable: false,
-  writable: false,
-  enumerable: true,
-  value: 0
-});
-
-Days.values = function() {
-  return Object.keys(Days)
-     .filter(key => typeof Days[key] !== 'function')
-     .sort((key1, key2) => Days[key1] - Days[key2]);
-}
-Days.keys = function() {
-  return Days.values()
-     .map(key => Days[key]);
-}
-Days.getByValue = function(val) {
-  return Days.values()
-    .find(dayValue => Days[dayValue] === val);
-}
-var addEnumValue = defineEnumProperty(Days)
- , days = ['MONDAY', 'TUESDAY', 'WEDNESDAY',
-    'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
-days.forEach((day, index) => {
-   addEnumValue(day, index);
-});
-log(Days.values()); // ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-log(Days.keys()); // [0, 1, 2, 3, 4, 5, 6]
-let day = Days.SUNDAY; 
-log(Days.getByValue(day)); // 'SUNDAY'
-log(Days.FRIDAY); // 4
-
-
-
-
-
+const binStrLen = '00000000';
+const binStrType = '00';
 
 const AttributeType = {
     UNIQUE_IDENTIFIER : "Unique Identifier",
@@ -618,12 +566,3 @@ const ConformanceClause = {
     CESSATION_OF_OPERATION  : 0x00000006,
     PRIVILEGE_WITHDRAWN     : 0x00000007
 }
-
-
-export let tags = Tags;
-export let types = Types;
-export let operation = Operation; 
-export let attributeType = AttributeType;
-export let cryptographicAlgorithm = CryptographicAlgorithm;
-export let cryptographicUsageMask = CryptographicUsageMask;
-export let nameType = NameType;
