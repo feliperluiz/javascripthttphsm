@@ -26,6 +26,7 @@ function formatValues(value, type) {
 			return tmpStr;
 		case Types.ENUMERATION:
 			var enumFill = '00000000'; 
+			value = value + "";
 			tmpStr = (enumFill + value.toString(16)).substr(-8);
 			return tmpStr;
 		case Types.TEXT_STRING:

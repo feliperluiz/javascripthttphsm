@@ -29,11 +29,26 @@ var TTLVItemOperation = new KMIPTTLV (Tags.OPERATION, Types.ENUMERATION, Operati
 var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, '', 0x00000188)
 var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Operation.QUERY_PROFILES, 0x00000004)
 
+var sumBlocks = TTLVRequest.getBlock() + 
+  TTLVHeader.getBlock() + 
+  TTLVProtocol.getBlock() + 
+  TTLVProtocolMajor.getBlock() + 
+  TTLVProtocolMinor.getBlock() + 
+  TTLVHeaderBatch.getBlock() + 
+  TTLVBatchItem.getBlock() + 
+  TTLVItemOperation.getBlock() + 
+  TTLVRequestPayload.getBlock() + 
+  TTLVQueryFunction.getBlock();
 
-var request = {}; //enviar um binario
 
 
-cliente.send(request);
+function hex2bin(hex){
+    return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
+}
+
+console.log (sumBlocks);
+
+cliente.send(sumBlocks);
 
 /*if (client.status == 200)
     alert("A assinatura foi bem sucedida!\n\nThe response representation was:\n\n" + client.responseText)
