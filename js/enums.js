@@ -68,7 +68,7 @@ const ConformanceClause = {
     INTEGER 		 : 0x02,
     LONG_INTEGER	 : 0x03,
     BIG_INTEGER		 : 0x04,
-    NUMERATION		 : 0x05,
+    ENUMERATION		 : 0x05,
     BOOLEAN 		 : 0x06,
     TEXT_STRING 	 : 0x07,
     BYTE_STRING 	 : 0x08,

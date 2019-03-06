@@ -13,6 +13,7 @@ function KMIPTTLV (tag, type, value, length) {
 
 KMIPTTLV.prototype.getBlock = function()
 {
+	//example var TTLVRequest = new KMIPTTLV (Tags.REQUEST_MESSAGE, Types.STRUCTURE, '', 0x000001e8);
   return this.tag.toString(16) + '' + formatNumbers(this.type, 'type') + '' + formatNumbers(this.length, 'length') + '' + this.value + '' + this.padding;
 };
 
@@ -114,7 +115,7 @@ function _getLength(value) {
 
 function formatNumbers(number, type) {
 	var basenum = '00000000'; 
-	if (type === 'type') {
+	if (type === 'type') { //no exemplo do TTLVRequest é um type de Structure
 		basenum = binStrType;
 	} else if (type === 'length') {
 		basenum = binStrLen;
