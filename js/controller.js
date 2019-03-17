@@ -1,16 +1,6 @@
 function Sign () {
-
-var url = "http://192.168.105.9:5696/kmip";
-cliente = new XMLHttpRequest();
-cliente.onreadystatechange = function () { 
-    if (cliente.readyState == 4 && cliente.status == 200) {
-        var json = JSON.parse(cliente.responseText);
-        console.log(json)
-    }
-}
-
-cliente.open("POST", url, true);
-cliente.setRequestHeader("Content-Type", "application/octet-stream");
+  var socket = io("ws://192.168.105.9:5696/kmip"); //4433
+ 
 
 
 //criar TTLV de teste
@@ -30,35 +20,17 @@ var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, ''
 var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, QueryFunction.QUERY_PROFILES, 0x00000004)
 
 
-var sumBlocks = TTLVRequest.getBlock();
-  // TTLVHeader.getBlock() + 
-  // TTLVProtocol.getBlock() + 
-  // TTLVProtocolMajor.getBlock() + 
-  // TTLVProtocolMinor.getBlock() + 
-  // TTLVMaximumResponse.getBlock() + 
-  // TTLVHeaderBatch.getBlock() + 
-  // TTLVBatchItem.getBlock() + 
-  // TTLVItemOperation.getBlock() + 
-  // TTLVRequestPayload.getBlock() + 
-  // TTLVQueryFunction.getBlock();
+var sumBlocks = TTLVRequest.getBlock() + TTLVHeader.getBlock() + TTLVProtocol.getBlock() + TTLVProtocolMajor.getBlock() + 
+  TTLVProtocolMinor.getBlock() + TTLVMaximumResponse.getBlock() + TTLVHeaderBatch.getBlock() + TTLVBatchItem.getBlock() + 
+  TTLVItemOperation.getBlock() + TTLVRequestPayload.getBlock() + TTLVQueryFunction.getBlock();
 
-// console.log(TTLVRequest.getBlock());
-// console.log(TTLVHeader.getBlock());
-// console.log(TTLVProtocol.getBlock());
-// console.log(TTLVProtocolMajor.getBlock());
-// console.log(TTLVProtocolMinor.getBlock());
-// console.log(TTLVMaximumResponse.getBlock());
-// console.log(TTLVHeaderBatch.getBlock());
-// console.log(TTLVBatchItem.getBlock());
-// console.log(TTLVItemOperation.getBlock());
-// console.log(TTLVRequestPayload.getBlock());
-// console.log(TTLVQueryFunction.getBlock());
-
-function hex2bin(hex){
-    return sumBlocks.toString(2).substr(-8);
+function hex2bin(sumBlocks){
+  return sumBlocks.toString(2).substr(-8);
 }
 
-cliente.send(01000010000000000111100000000001000000000000000000000001111010000100001000000000011101110000000100000000000000000000000000111000010000100000000001101001000000010000000000000000000000000010000001000010000000000110101000000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000001101011000000100000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000000000100001000000000010100000000001000000000000000000000000000000100000000000000000000000001000000000000000000000000000000000000000001000010000000000000110100000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000000001111000000010000000000000000000000011010000001000010000000000101110000000101000000000000000000000000000001000000000000000000000000000010010000000000000000000000000000000000010000100000000001111001000000010000000000000000000000011000100001000010000000000111010000000101000000000000000000000000000001000000000000000000000000000001000000000000000000000000000000000000);
+
+socket.emit('message', hex2bin(sumBlocks));
+
 
 /*if (client.status == 200)
     alert("A assinatura foi bem sucedida!\n\nThe response representation was:\n\n" + client.responseText)

@@ -1,0 +1,26 @@
+{
+  "name": "signaturekmip",
+  "version": "1.0.0",
+  "description": "Signature KMIP",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feliperluiz/signaturekmip.git"
+  },
+  "keywords": [
+    "sign",
+    "kmip"
+  ],
+  "author": "feliperluiz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/feliperluiz/signaturekmip/issues"
+  },
+  "homepage": "https://github.com/feliperluiz/signaturekmip#readme",
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  }
+}
