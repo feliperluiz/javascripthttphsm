@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/feliperluiz/signaturekmip#readme",
   "dependencies": {
+    "file-system": "^2.2.2",
     "socket.io": "^2.2.0"
   }
 }

@@ -25,9 +25,10 @@ var sumBlocks = TTLVRequest.getBlock() + TTLVHeader.getBlock() + TTLVProtocol.ge
   TTLVItemOperation.getBlock() + TTLVRequestPayload.getBlock() + TTLVQueryFunction.getBlock();
 
 function hex2bin(sumBlocks){
-  return sumBlocks.toString(2).substr(-8);
+  return sumBlocks.toString(2);
 }
 
+console.log(hex2bin(sumBlocks));
 
 socket.emit('message', hex2bin(sumBlocks));
 
