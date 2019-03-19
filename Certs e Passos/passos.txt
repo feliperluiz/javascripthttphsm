@@ -1,4 +1,4 @@
-Então o que foi feito foi o seguinte:
+﻿Então o que foi feito foi o seguinte:
 1 - Entrei no HSM da dinamo aqui e peguei o certificado do HSM.
 2 - Criei um certificado localmente via openssl com seu par de chaves.
 3 - Mudei o modo de autenticação duplo fator de um cliente para usar x509.
@@ -8,8 +8,3 @@ Então o que foi feito foi o seguinte:
 7 - Você conseguirá usar o HSM para assinar e verificar. A diferença é que no modo fips algumas funções são mais restritivas. Por exemplo, talvez você não consiga exportar chaves do HSM, talvez uma ou outra função não seja permitida.
 
 
-1) Transformar corretamente Hex para Binary
-2) Criar requisição Sign
-3) Conferir dados da requisição
-4) Ver como fazer o detached do documento
-5) Ver como anexar e retorna o documento
