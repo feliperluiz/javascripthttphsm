@@ -29,7 +29,7 @@ function formatValues(value, type) {
 			var enumFill = '00000000'; 
 			value = value + "";
 			tmpStr = (enumFill + value.toString(16)).substr(-8);
-			return tmpStr;
+			return tmpStr;  
 		case Types.TEXT_STRING:
 			if (!isHex(value)) {
 				var hexbuf = new Buffer(value);
@@ -74,6 +74,17 @@ function ttlvPadding(type, value) {
 			return pad;
 	}
 };
+
+/*If the Item Type is Structure,
+then the Item Length is the total length of all of the sub-items contained in the structure, including any padding. 
+
+If the Item Type is Integer, Enumeration, Text String, Byte String, or Interval, 
+then the Item Length is the number of bytes excluding the padding bytes. 
+
+Text Strings and Byte Strings SHALL be padded with the minimal number of bytes following the Item Value 
+to obtain a multiple of eight bytes. 
+
+Integers, Enumerations, and Intervals SHALL be padded with four bytes following the Item Value.*/
 
 function getFieldLength(type, value) {
 	var remainder, length;
