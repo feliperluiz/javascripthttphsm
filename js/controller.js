@@ -1,13 +1,21 @@
 function Sign () {
 
-  var socket = io("ws://192.168.105.9:5696", { 
-      path: '/kmip',
-      key: './keykmip.pem',
-      cert: './certkmip.pem',
-      ca: './certificado_hsm.pem',
-      secure: true,
-      transports:  ['websocket'],
-      onlyBinaryUpgrades: true
+  var socket = io("wss://localhost:5696", { 
+    
+     key: './keykmip.pem',
+     cert: './certkmip.pem',
+     ca: './cert.pem',
+  //     secure: true,
+       transports:  ['websocket']
+  //     onlyBinaryUpgrades: true
+  });
+
+  socket.on('connect', function () {
+    socket.send('hi');
+
+    socket.on('message', function (msg) {
+      // my msg
+    });
   });
 
 
@@ -43,19 +51,15 @@ console.log(hex2bin(sumBlocks));
 socket.emit('msg', 1000010000000000111100000000001000000000000000000000001111010000100001000000000011101110000000100000000000000000000000000111000010000100000000001101001000000010000000000000000000000000010000001000010000000000110101000000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000001101011000000100000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000000000100001000000000010100000000001000000000000000000000000000000100000000000000000000000001000000000000000000000000000000000000000001000010000000000000110100000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000000001111000000010000000000000000000000011010000001000010000000000101110000000101000000000000000000000000000001000000000000000000000000000010010000000000000000000000000000000000010000100000000001111001000000010000000000000000000000011000100001000010000000000111010000000101000000000000000000000000000001000000000000000000000000000001000000000000000000000000000000000000);
 
 
-socket.on('connection', function (socket) {
-        console.log('socketid',socket.id,'connected');
-        socket.on('msg', function (data) {
-            // socket_handler.process(socket,data,function(err) {
-            //    //
-            // });
-        });
+// socket.on('connection', function (socket) {
+//         console.log('socketid',socket.id,'connected');
+//         socket.on('msg', function (data) {
+//             // socket_handler.process(socket,data,function(err) {
+//             //    //
+//             // });
+//         });
         
-    });
-
-socket.on('reconnect_attempt', () => {
-  socket.io.opts.transports = ['polling', 'websocket'];
-});
+// });
 
 /*if (client.status == 200)
     alert("A assinatura foi bem sucedida!\n\nThe response representation was:\n\n" + client.responseText)
