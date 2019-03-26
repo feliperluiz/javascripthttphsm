@@ -1,14 +1,18 @@
 function Sign () {
 
-  var socket = io("wss://localhost:5696", { 
-    
+  var socket = io("wss://Felipe:5696", { 
+      path: '/kmip',
      key: './keykmip.pem',
      cert: './certkmip.pem',
      ca: './cert.pem',
-  //     secure: true,
        transports:  ['websocket']
   //     onlyBinaryUpgrades: true
   });
+
+  //s_server -accept 5696 -cert cert.pem -key key.pem -verify 10 -CAfile certkmip.pem
+  //s_client -connect localhost:5696 -cert certkmip.pem -key keykmip.pem
+  //1) CA do controller não está sendo usado como certificado de confiança (está confiando no navegador)
+  //2) a biblioteca do socket IO deve ignorar a validação de common name (CN), está esperando que o CN do cert (que no caso pratico é o da dinamo), seja igual ao host onde estou me conectando
 
   socket.on('connect', function () {
     socket.send('hi');
