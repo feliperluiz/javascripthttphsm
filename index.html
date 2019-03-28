@@ -5,9 +5,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Assinatura digital de documentos</title>
   	<link rel="stylesheet" href="css/bootstrap.css">
-    <script src="js/ttlv.js" type="text/javascript"></script>
-    <script src="js/enums.js" type="text/javascript"></script>
-
 	</head>
 	
 <body>
@@ -19,7 +16,8 @@
         	Escolha o documento que você deseja assinar:
         </p>
         
-        <input type="file" id="input_file" title="Clique aqui" />
+
+        <input type="file" id="input_file" onchange="onChange(event)" title="Clique aqui" />
 
       <br /> <br />       
       <p> <a class="btn btn-primary btn-lg" id="sign" onclick="Sign()" role="button"> Assinar &raquo;</a> </p>
@@ -32,8 +30,11 @@
       </footer>
     </div> 
     
-    <script src="socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/ttlv.js" type="text/javascript"></script>
+    <script src="js/enums.js" type="text/javascript"></script>
+    <script src="js/socket.io.js" type="text/javascript"></script>
+    <script src="js/sha256.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="js/controller.js" type="text/javascript"></script>
 
 	</body>
