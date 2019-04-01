@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/feliperluiz/signaturekmip#readme",
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "express": "^4.16.4",
     "file-system": "^2.2.2",
+    "jquery": "^3.3.1",
     "socket.io": "^2.2.0"
   }
 }

@@ -1,12 +1,15 @@
-const hashDocument = '';
+var hashDocument;
+
 
 function onChange(event) { 
-    var readerFile = new FileReader()
+    var logFile = $('#input_file').get(0).files[0];
+    var readerFile = new FileReader();
+    readerFile.readAsBinaryString(logFile);
     readerFile.onload = function(event){
-        var arrayBuffer = event.target.result
-        var wordArray = CryptoJS.lib.WordArray.create(arrayBuffer)
-        hashDocument = CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);  
-        console.log(hashDocument);     
+        var arrayBuffer = event.target.result;
+        hashDocument = CryptoJS.SHA256(arrayBuffer).toString(CryptoJS.enc.Hex);
+        console.log(hashDocument);
+             
     }
 }
 
@@ -16,9 +19,9 @@ function Sign () {
      path: '/kmip',
      key: './keykmip.pem',
      cert: './certkmip.pem',
-     ca: './certhsm.pem',
+     ca: './certificado_hsm.pem',
      transports:  ['websocket'],
-     secure: true
+     rejectUnauthorized: false
   });
 
   //s_server -accept 5696 -cert cert.pem -key key.pem -verify 10 -CAfile certkmip.pem
@@ -56,6 +59,11 @@ var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Qu
 // 420079 01 00000188 ''
 // 420074 05 00000004 00000010 00000000
 
+function hex2bin(n) {
+  // console.log('Numero em hex: ' + n);
+  // console.log('Numero em bin: ' + parseInt(n,16).toString(2));
+  return n.toString(2).substr(-8);
+}
 
 var bin1 = hex2bin(TTLVRequest.getBlock());
 var bin2 = hex2bin(TTLVHeader.getBlock());
@@ -68,23 +76,6 @@ var bin8 = hex2bin(TTLVBatchItem.getBlock());
 var bin9 = hex2bin(TTLVItemOperation.getBlock());
 var bin10 = hex2bin(TTLVRequestPayload.getBlock());
 var bin11 = hex2bin(TTLVQueryFunction.getBlock());
-
-function hex2bin(n) {
-return (parseInt(n, 16).toString(2));
-}
-
-console.log(TTLVRequest.getBlock());
-console.log("Convert: " + hex2bin(bin1));
-console.log(TTLVHeader.getBlock());
-console.log(TTLVProtocol.getBlock());
-console.log(TTLVProtocolMajor.getBlock());
-console.log(TTLVProtocolMinor.getBlock());
-console.log(TTLVMaximumResponse.getBlock());
-console.log(TTLVHeaderBatch.getBlock());
-console.log(TTLVBatchItem.getBlock());
-console.log(TTLVItemOperation.getBlock());
-console.log(TTLVRequestPayload.getBlock());
-console.log(TTLVQueryFunction.getBlock());
 
 
 //socket.emit('message', hex2bin(sumBlocks));

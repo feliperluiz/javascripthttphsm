@@ -1,27 +1,28 @@
-const https = require('https');
-const hostname = '127.0.0.1';
-const port = 3000;
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+const ioclient = require('socket.io-client');
 
-https.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('hello world\n');
-}).listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+
+server.listen(3000);
+
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
 
-// io.on('connection', function(socket) {
-//     socket.on('message', function(data){
-        
-//     	//tratar dado recebido da assinatura
-//         console.log("received data:");
-//         console.log(data);
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
 
-//         // var bufArr = new ArrayBuffer(4);
-//         // var bufView = new Uint8Array(bufArr);
-//         // bufView[0]=6;
-//         // bufView[1]=7;
-//         // bufView[2]=8;
-//         // bufView[3]=9;
-//         // socket.emit('message',bufArr);
-//     });
-// });
+console.log('test');
+ioclient('wss://192.168.105.9:5696', { 
+      path: '/kmip',
+      key: './keykmip.pem',
+      cert: './certkmip.pem',
+      ca: './certificado_hsm.pem',
+      transports:  ['websocket'],
+      rejectUnauthorized: false
+   });
