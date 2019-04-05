@@ -42,7 +42,7 @@ fs.readFile(filePath, function(error, content) {
 });
 
 }).listen(4000);
-console.log('Servidor rodando em http://127.0.0.1:4000/');
+console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
 
 //Criando servidor WebTCP que será o Proxy para todas as requisições TCP dos clientes
 
@@ -56,22 +56,22 @@ serverTCP.listen(4002, "localhost");
 
 var net = require('net');
 var server = net.createServer(function (socket) {
-  socket.write("Enviando mensagem do socket interno para o cliente\r\n");
   socket.pipe(socket);
 });
 
-server.listen(4001, "localhost", function() {
+server.listen(4000, "localhost", function() {
   address = server.address();
-  console.log("Aberto servidor para socket interno %j", address);
+  console.log('(4000-SOCKET) Aberto servidor para socket interno %j', address);
 });
 
 server.on('connection', function (stream) {
-  console.log('Nova conexão de socket interno ' + stream.remoteAddress);
+  console.log('(4000-SOCKET) Nova conexão de socket interno ' + stream.remoteAddress);
+  console.log(stream);
 });
 
 server.on('data', function (data) {
   hashDocumento = data;
-  console.log('Dado recebido: ' + hashDocumento);
+  console.log('(4000-SOCKET) Dado recebido: ' + hashDocumento);
 });
 
 if (hashDocumentoAssinado !== '')
@@ -90,14 +90,16 @@ const options = {
 };
 
 const socket = tls.connect(options, () => {
-    console.log('client connected', socket.authorized ? 'authorized' : 'unauthorized');
+    console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
     process.stdin.pipe(socket);
     process.stdin.resume();
 });
 
 socket.setEncoding('utf8');
-if (hashDocumento !== '')
+if (hashDocumento !== '') {
+    console.log("Tem hash documento para enviar pro HSM!");
     socket.write(hashDocumento);
+}
 
 socket.on('data', (data) => {
     hashDocumentoAssinado = data;
