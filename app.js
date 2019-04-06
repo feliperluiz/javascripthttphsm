@@ -52,11 +52,13 @@ var serverTCP = new WebTCP();
 serverTCP.listen(4002, "localhost");
 
 
-//Criando socket interno para envio do hash da assinatura (partindo do cliente) e utilizando 
+//Criando socket TCP interno para envio do hash da assinatura (partindo do cliente)  
 
 var net = require('net');
 var server = net.createServer(function (socket) {
-  socket.pipe(socket);
+    socket.pipe(socket);
+    if (hashDocumentoAssinado !== '')
+    socket.write(hashDocumentoAssinado);
 });
 
 server.listen(4000, "localhost", function() {
@@ -66,44 +68,43 @@ server.listen(4000, "localhost", function() {
 
 server.on('connection', function (stream) {
   console.log('(4000-SOCKET) Nova conexão de socket interno ' + stream.remoteAddress);
-  console.log(stream);
 });
 
 server.on('data', function (data) {
-  hashDocumento = data;
-  console.log('(4000-SOCKET) Dado recebido: ' + hashDocumento);
+    hashDocumento = data;
+    console.log('(4000-SOCKET) Dado recebido: ' + hashDocumento);
 });
 
-if (hashDocumentoAssinado !== '')
-    socket.write(hashDocumentoAssinado);
+
+
 
 /////////////////////////
 
 const options = {
-    ca: fs.readFileSync('certhsm.pem'),
+    ca: [ fs.readFileSync('certhsm.pem') ],
     key: fs.readFileSync('keykmip.pem'),
     cert: fs.readFileSync('certkmip.pem'),
     host: '192.168.105.9',
-    port: 5696,
+    port: '5696',
     rejectUnauthorized:false,
-    requestCert:true
+    requestCert:true,
+    checkServerIdentity: () => { return null; }
 };
 
-const socket = tls.connect(options, () => {
+var socket = tls.connect(options, () => {
     console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
     process.stdin.pipe(socket);
     process.stdin.resume();
 });
 
-socket.setEncoding('utf8');
 if (hashDocumento !== '') {
-    console.log("Tem hash documento para enviar pro HSM!");
+    console.log('[5696-SOCKET] Tem hash documento para enviar pro HSM!');
     socket.write(hashDocumento);
 }
 
 socket.on('data', (data) => {
     hashDocumentoAssinado = data;
-    console.log('Assinatura realizada recebida: ' + hashDocumentoAssinado);
+    console.log('[5696-SOCKET] Assinatura realizada recebida: ' + hashDocumentoAssinado);
 });
 
 socket.on('error', (error) => {
