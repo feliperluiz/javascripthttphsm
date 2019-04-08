@@ -2,25 +2,25 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var tls = require('tls');
-var hashDocumentoAssinado = '';
-var hashDocumento = '';
+var documentoBinarioAssinado = '';
+var documentoBinario = '';
 
 http.createServer(function (request, response) {
-console.log('Requisitando início do servidor node...');
+    console.log('Requisitando início do servidor node...');
 
-var filePath = '.' + request.url;
-if (filePath == './')
-    filePath = './index.html';
+    var filePath = '.' + request.url;
+    if (filePath == './')
+        filePath = './index.html';
 
-var extname = path.extname(filePath);
-var contentType = 'text/html';
-switch (extname) {
-    case '.js':
-        contentType = 'text/javascript';
-        break;
-    case '.css':
-        contentType = 'text/css';
-        break;
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
 }
 
 fs.readFile(filePath, function(error, content) {
@@ -44,74 +44,51 @@ fs.readFile(filePath, function(error, content) {
 }).listen(4000);
 console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
 
-//Criando servidor WebTCP que será o Proxy para todas as requisições TCP dos clientes
+//Criação do WebSocket para comunicação com o cliente Browser
+var WebSocketServer = require('ws').Server,
+    wss = new WebSocketServer({port: 4001})
 
-var WebTCP = require('./webtcp/lib/server/webtcp.js').WebTCP
+    wss.on('connection', function (ws) {
+      ws.on('message', function (message) {
 
-var serverTCP = new WebTCP();
-serverTCP.listen(4002, "localhost");
+            //Momento em que recebeu binário do Browser
 
+            console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
+        
+            documentoBinario = message;
 
-//Criando socket TCP interno para envio do hash da assinatura (partindo do cliente)  
+            // Informações sobre a comunicação com o TLS
 
-var net = require('net');
-var server = net.createServer(function (socket) {
-    socket.pipe(socket);
-    if (hashDocumentoAssinado !== '')
-    socket.write(hashDocumentoAssinado);
-});
+            const options = {
+                ca: [ fs.readFileSync('certhsm.pem') ],
+                key: fs.readFileSync('keykmip.pem'),
+                cert: fs.readFileSync('certkmip.pem'),
+                host: '192.168.105.9',
+                port: '5696',
+                rejectUnauthorized:false,
+                secureProtocol: 'TLSv1_2_method',
+                checkServerIdentity: () => { return null; }
+            };
 
-server.listen(4000, "localhost", function() {
-  address = server.address();
-  console.log('(4000-SOCKET) Aberto servidor para socket interno %j', address);
-});
+            //Criação do TLS para conexão com o HSM
 
-server.on('connection', function (stream) {
-  console.log('(4000-SOCKET) Nova conexão de socket interno ' + stream.remoteAddress);
-});
+            var socket = tls.connect(options, () => {
+                console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
+            });
+                
+            if (documentoBinario !== '') {
+                console.log('(5696-SOCKET) Tem hash documento para enviar pro HSM!');
+                socket.write(documentoBinario);
+            }
+                
+            socket.on('data', (data) => {
+                documentoBinarioAssinado = data;
+                console.log('(5696-SOCKET) Assinatura realizada recebida: ' + documentoBinarioAssinado);
 
-server.on('data', function (data) {
-    hashDocumento = data;
-    console.log('(4000-SOCKET) Dado recebido: ' + hashDocumento);
-});
+                //Enviando documento em binário assinado para o cliente tratar              
+                ws.send(documentoBinarioAssinado);
 
-
-
-
-/////////////////////////
-
-const options = {
-    ca: [ fs.readFileSync('certhsm.pem') ],
-    key: fs.readFileSync('keykmip.pem'),
-    cert: fs.readFileSync('certkmip.pem'),
-    host: '192.168.105.9',
-    port: '5696',
-    rejectUnauthorized:false,
-    requestCert:true,
-    checkServerIdentity: () => { return null; }
-};
-
-var socket = tls.connect(options, () => {
-    console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
-    process.stdin.pipe(socket);
-    process.stdin.resume();
-});
-
-if (hashDocumento !== '') {
-    console.log('[5696-SOCKET] Tem hash documento para enviar pro HSM!');
-    socket.write(hashDocumento);
-}
-
-socket.on('data', (data) => {
-    hashDocumentoAssinado = data;
-    console.log('[5696-SOCKET] Assinatura realizada recebida: ' + hashDocumentoAssinado);
-});
-
-socket.on('error', (error) => {
-    console.log(error);
-});
-
-socket.on('end', (data) => {
-    console.log('Socket end event');
-});
+            });
+        })
+    })
 
