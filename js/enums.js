@@ -1,6 +1,3 @@
-const binStrLen = '00000000';
-const binStrType = '00';
-
 const AttributeType = {
     UNIQUE_IDENTIFIER : "Unique Identifier",
     NAME : "Name",

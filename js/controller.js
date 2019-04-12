@@ -38,7 +38,7 @@ var TTLVItemOperation = new KMIPTTLV (Tags.OPERATION, Types.ENUMERATION, Operati
 var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, '', 0x00000188);
 var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, QueryFunction.QUERY_PROFILES, 0x00000004);
 
-// 420078 01 000001e8 ''
+// 420078 01 000001e8 '' //cada numero em hexadecimal vale 4 numeros em binari
 
 // 420077 01 00000038 ''
 // 420069 01 00000020 ''
@@ -52,26 +52,30 @@ var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Qu
 // 420079 01 00000188 ''
 // 420074 05 00000004 00000010 00000000
 
-function hex2bin(n) {
   // console.log('Numero em hex: ' + n);
   // console.log('Numero em bin: ' + parseInt(n,16).toString(2));
-  return n.toString(2).substr(-8);
-}
+  // var decimal = parseInt(hex, 16);
+  // var binario = decimal.toString(2);
 
-var bin1 = hex2bin(TTLVRequest.getBlock());
-var bin2 = hex2bin(TTLVHeader.getBlock());
-var bin3 = hex2bin(TTLVProtocol.getBlock());
-var bin4 = hex2bin(TTLVProtocolMajor.getBlock());
-var bin5 = hex2bin(TTLVProtocolMinor.getBlock());
-var bin6 = hex2bin(TTLVMaximumResponse.getBlock());
-var bin7 = hex2bin(TTLVHeaderBatch.getBlock());
-var bin8 = hex2bin(TTLVBatchItem.getBlock());
-var bin9 = hex2bin(TTLVItemOperation.getBlock());
-var bin10 = hex2bin(TTLVRequestPayload.getBlock());
-var bin11 = hex2bin(TTLVQueryFunction.getBlock());
+  function hex2bin(str) {
+    for (var bytes = [], c = 0; c < str.length; c += 2)
+    bytes.push(parseInt(str.substr(c, 2), 16));
+    return bytes;
+  }
+
+
+console.log(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
+TTLVProtocolMinor.getBlock()+TTLVMaximumResponse.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
+TTLVItemOperation.getBlock()+TTLVRequestPayload.getBlock()+TTLVQueryFunction.getBlock());
+
+var bin1 = hex2bin(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
+TTLVProtocolMinor.getBlock()+TTLVMaximumResponse.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
+TTLVItemOperation.getBlock()+TTLVRequestPayload.getBlock()+TTLVQueryFunction.getBlock());
+
+console.log(bin1);
 
 ws.onopen = function () {
-  ws.send('1000010000000000111100000000001000000000000000000000001111010000100001000000000011101110000000100000000000000000000000000111000010000100000000001101001000000010000000000000000000000000010000001000010000000000110101000000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000001101011000000100000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000000000100001000000000010100000000001000000000000000000000000000000100000000000000000000000001000000000000000000000000000000000000000001000010000000000000110100000010000000000000000000000000000001000000000000000000000000000000000100000000000000000000000000000000010000100000000000001111000000010000000000000000000000011010000001000010000000000101110000000101000000000000000000000000000001000000000000000000000000000010010000000000000000000000000000000000010000100000000001111001000000010000000000000000000000011000100001000010000000000111010000000101000000000000000000000000000001000000000000000000000000000001000000000000000000000000000000000000')
+  ws.send(bin1)
   console.log('Valor de assinatura enviado');
 };
 

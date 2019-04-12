@@ -1,15 +1,15 @@
+const binStrLen = '00000000';
+const binStrType = '00';
+
 function KMIPTTLV (tag, type, value, length) {
 		this.tag = tag;
 		this.type = type;
 		this.value = formatValues(value, this.type);
-		this.constructed = (value instanceof Array);
-		//TODO::  If constructed, get bytelength of children.
+		this.constructed = (value instanceof Array); //TODO::  If constructed, get bytelength of children.	
 		this.length = (typeof length === 'undefined') ? getFieldLength(this.type, this.value) : length.toString(16);
 		this.padding = ttlvPadding(this.type, this.value);
 		this.fullLength = _getLength(this.tag.toString(16)) + _getLength(formatNumbers(this.type, 'type')) + _getLength(formatNumbers(this.length, 'length')) + _getLength(this.value) + _getLength(this.padding);
 }
-
-
 
 KMIPTTLV.prototype.getBlock = function()
 {
@@ -76,20 +76,21 @@ function ttlvPadding(type, value) {
 };
 
 /*If the Item Type is Structure,
-then the Item Length is the total length of all of the sub-items contained in the structure, including any padding. 
+then the Item Length is the total length of all of the sub-items contained in the structure, 
+including any padding. 
 
 If the Item Type is Integer, Enumeration, Text String, Byte String, or Interval, 
 then the Item Length is the number of bytes excluding the padding bytes. 
 
-Text Strings and Byte Strings SHALL be padded with the minimal number of bytes following the Item Value 
-to obtain a multiple of eight bytes. 
+Text Strings and Byte Strings SHALL be padded with the minimal number of bytes 
+following the Item Value to obtain a multiple of eight bytes. 
 
 Integers, Enumerations, and Intervals SHALL be padded with four bytes following the Item Value.*/
 
 function getFieldLength(type, value) {
 	var remainder, length;
 	switch(type) {
-		case Types.STRUCTURE:
+		case Types.STRUCTURE: //is the total length of all of the sub-items contained in the structure, including any padding.
 			if (value) {
 				var tmpLen = getByteLen(value);
 				return tmpLen.toString(16);
@@ -105,7 +106,7 @@ function getFieldLength(type, value) {
 			return 8;
 		case Types.TEXT_STRING:
 		if (value) {
-			var tmpLen = value.length/2;
+			var tmpLen = value.length/2; //ex: 0000000(size 8) / 2 = 4
 			return parseInt(tmpLen.toString(16));
 		}
 		case Types.BYTE_STRING:
@@ -116,6 +117,29 @@ function getFieldLength(type, value) {
 		default:
 			return 4;
 	}
+}
+
+function getByteLen(normal_val) {
+    // Force string type
+    normal_val = String(normal_val);
+    var normal_buff = new Buffer(normal_val);
+
+    var byteLen = 0;
+    for (var i = 0; i < normal_val.length; i++) {
+        var c = normal_val.charCodeAt(i);
+        byteLen += c < (1 <<  7) ? 1 :
+                   c < (1 << 11) ? 2 :
+                   c < (1 << 16) ? 3 :
+                   c < (1 << 21) ? 4 :
+                   c < (1 << 26) ? 5 :
+                   c < (1 << 31) ? 6 : Number.NaN;
+    }
+
+    //console.log('GetByteLen Buffer: ');
+    //console.log(normal_buff.byteLength);
+    //console.log('GetByteLen Long Math: ');
+    //console.log(byteLen);
+    return byteLen;
 }
 
 function _getLength(value) {
