@@ -44,6 +44,22 @@ fs.readFile(filePath, function(error, content) {
 }).listen(4000);
 console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
 
+
+function byteToHexString(uint8arr) {
+  if (!uint8arr) {
+    return '';
+  }
+  
+  var hexStr = '';
+  for (var i = 0; i < uint8arr.length; i++) {
+    var hex = (uint8arr[i] & 0xff).toString(16);
+    hex = (hex.length === 1) ? '0' + hex : hex;
+    hexStr += hex;
+  }
+  
+  return hexStr.toUpperCase();
+}
+
 //Criação do WebSocket para comunicação com o cliente Browser
 var WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({port: 4001})
@@ -78,6 +94,7 @@ var WebSocketServer = require('ws').Server,
                 
             if (documentoBinario !== '') {
                 console.log('(5696-SOCKET) Tem hash documento para enviar pro HSM!');
+                console.log(documentoBinario);
                 socket.write(documentoBinario);
             }
                 
@@ -86,7 +103,7 @@ var WebSocketServer = require('ws').Server,
                 console.log('(5696-SOCKET) Assinatura realizada recebida: ' + documentoBinarioAssinado);
 
                 //Enviando documento em binário assinado para o cliente tratar              
-                ws.send(documentoBinarioAssinado);
+                ws.send(byteToHexString(documentoBinarioAssinado));
 
             });
         })

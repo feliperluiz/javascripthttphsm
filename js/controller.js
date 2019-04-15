@@ -57,18 +57,21 @@ var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Qu
   // var decimal = parseInt(hex, 16);
   // var binario = decimal.toString(2);
 
-  function hex2bin(str) {
-    for (var bytes = [], c = 0; c < str.length; c += 2)
-    bytes.push(parseInt(str.substr(c, 2), 16));
-    return bytes;
+
+function hexStringToByte(str) {
+  if (!str) {
+    return new Uint8Array();
   }
+  
+  var a = [];
+  for (var i = 0, len = str.length; i < len; i+=2) {
+    a.push(parseInt(str.substr(i,2),16));
+  }
+  
+  return new Uint8Array(a);
+}
 
-
-console.log(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
-TTLVProtocolMinor.getBlock()+TTLVMaximumResponse.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
-TTLVItemOperation.getBlock()+TTLVRequestPayload.getBlock()+TTLVQueryFunction.getBlock());
-
-var bin1 = hex2bin(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
+var bin1 = hexStringToByte(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
 TTLVProtocolMinor.getBlock()+TTLVMaximumResponse.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
 TTLVItemOperation.getBlock()+TTLVRequestPayload.getBlock()+TTLVQueryFunction.getBlock());
 
