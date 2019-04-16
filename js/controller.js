@@ -13,7 +13,7 @@ function onChange(event) {
     }
 }
 
-function Sign () {
+function Sign () {  
 
   var ws = new WebSocket('ws://localhost:4001');
 
@@ -24,33 +24,20 @@ function Sign () {
 
  
 //criando TTLV de teste
-var TTLVRequest = new KMIPTTLV (Tags.REQUEST_MESSAGE, Types.STRUCTURE, '', 0x000001e8);
+var TTLVRequest = new KMIPTTLV (Tags.REQUEST_MESSAGE, Types.STRUCTURE, '', 0x00000040);
 // //Header Section
-var TTLVHeader = new KMIPTTLV (Tags.REQUEST_HEADER, Types.STRUCTURE, '', 0x00000038);
-var TTLVProtocol = new KMIPTTLV (Tags.PROTOCOL_VERSION, Types.STRUCTURE, '', 0x00000020);
+var TTLVHeader = new KMIPTTLV (Tags.REQUEST_HEADER, Types.STRUCTURE, '', 0x00000014);
+var TTLVProtocol = new KMIPTTLV (Tags.PROTOCOL_VERSION, Types.STRUCTURE, '', 0x00000008);
 var TTLVProtocolMajor = new KMIPTTLV (Tags.PROTOCOL_VERSION_MAJOR, Types.INTEGER, 0x00000001, 0x00000004);
 var TTLVProtocolMinor = new KMIPTTLV (Tags.PROTOCOL_VERSION_MINOR, Types.INTEGER, 0x00000004, 0x00000004);
-var TTLVMaximumResponse = new KMIPTTLV (Tags.MAXIMUM_RESPONSE_SIZE, Types.INTEGER, 0x00000100, 0x00000004);
 var TTLVHeaderBatch = new KMIPTTLV (Tags.BATCH_COUNT, Types.INTEGER, 0x00000001, 0x00000004);
 //Batch Items
-var TTLVBatchItem = new KMIPTTLV (Tags.BATCH_ITEM, Types.STRUCTURE, '', 0x000001a0);
+var TTLVBatchItem = new KMIPTTLV (Tags.BATCH_ITEM, Types.STRUCTURE, '', 0x0000000C);
 var TTLVItemOperation = new KMIPTTLV (Tags.OPERATION, Types.ENUMERATION, Operation.QUERY, 0x00000004);
-var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, '', 0x00000188);
+var TTLVRequestPayload = new KMIPTTLV (Tags.REQUEST_PAYLOAD, Types.STRUCTURE, '', 0x0000004);
 var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, QueryFunction.QUERY_PROFILES, 0x00000004);
 
-// 420078 01 000001e8 '' //cada numero em hexadecimal vale 4 numeros em binari
 
-// 420077 01 00000038 ''
-// 420069 01 00000020 ''
-// 42006a 02 00000004 00000001 00000000
-// 42006b 02 00000004 00000004 00000000
-// 420050 02 00000004 00000100 00000000
-// 42000d 02 00000004 00000001 00000000
-
-// 42000f 01 000001a0 ''
-// 42005c 05 00000004 00000024 00000000
-// 420079 01 00000188 ''
-// 420074 05 00000004 00000010 00000000
 
   // console.log('Numero em hex: ' + n);
   // console.log('Numero em bin: ' + parseInt(n,16).toString(2));
@@ -72,7 +59,7 @@ function hexStringToByte(str) {
 }
 
 var bin1 = hexStringToByte(TTLVRequest.getBlock()+TTLVHeader.getBlock()+TTLVProtocol.getBlock()+TTLVProtocolMajor.getBlock()+
-TTLVProtocolMinor.getBlock()+TTLVMaximumResponse.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
+TTLVProtocolMinor.getBlock()+TTLVHeaderBatch.getBlock()+TTLVBatchItem.getBlock()+
 TTLVItemOperation.getBlock()+TTLVRequestPayload.getBlock()+TTLVQueryFunction.getBlock());
 
 console.log(bin1);
@@ -83,11 +70,8 @@ ws.onopen = function () {
 };
 
 ws.onmessage = function(data) {
-  var reader = new FileReader();
-  reader.onload = function() {
-      console.log(reader.result);
-  }
-  console.log('Documento em binário assinado: ' + reader.readAsText(data.data));
+  hashDocumentoAssinado = data;
+  console.log('Documento em binário assinado: ' + hashDocumentoAssinado.data);
 };
 
 

@@ -42,7 +42,7 @@ fs.readFile(filePath, function(error, content) {
 });
 
 }).listen(4000);
-console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
+//console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
 
 
 function byteToHexString(uint8arr) {
@@ -69,7 +69,7 @@ var WebSocketServer = require('ws').Server,
 
             //Momento em que recebeu binário do Browser
 
-            console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
+            //console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
         
             documentoBinario = message;
 
@@ -89,18 +89,18 @@ var WebSocketServer = require('ws').Server,
             //Criação do TLS para conexão com o HSM
 
             var socket = tls.connect(options, () => {
-                console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
+                //console.log('(5696-SOCKET) Conexão ao HSM: ', socket.authorized ? 'authorized' : 'unauthorized');
             });
                 
             if (documentoBinario !== '') {
-                console.log('(5696-SOCKET) Tem hash documento para enviar pro HSM!');
-                console.log(documentoBinario);
+                //console.log('(5696-SOCKET) Tem hash documento para enviar pro HSM!');
+                //console.log(documentoBinario);
                 socket.write(documentoBinario);
             }
                 
             socket.on('data', (data) => {
                 documentoBinarioAssinado = data;
-                console.log('(5696-SOCKET) Assinatura realizada recebida: ' + documentoBinarioAssinado);
+                //console.log('(5696-SOCKET) Assinatura realizada recebida: ' + byteToHexString(documentoBinarioAssinado));
 
                 //Enviando documento em binário assinado para o cliente tratar              
                 ws.send(byteToHexString(documentoBinarioAssinado));
