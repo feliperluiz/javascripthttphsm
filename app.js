@@ -69,7 +69,7 @@ var WebSocketServer = require('ws').Server,
 
             //Momento em que recebeu binário do Browser
 
-            console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
+            //console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
         
             documentoBinario = message;
 
@@ -81,8 +81,11 @@ var WebSocketServer = require('ws').Server,
                 cert: fs.readFileSync('certkmip.pem'),
                 host: '192.168.105.9',
                 port: '5696',
-                rejectUnauthorized:false,
                 secureProtocol: 'TLSv1_2_method',
+                //Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: IP: 192.168.105.9 is not in the cert's list:
+                // If not false the server will reject any connection which is not 
+                // authorized with the list of supplied CAs. This option only has an effect if requestCert is true. 
+                requestCert: true,
                 checkServerIdentity: () => { return null; }
             };
 
@@ -94,8 +97,7 @@ var WebSocketServer = require('ws').Server,
                 
             if (documentoBinario !== '') {
                 console.log('(5696-SOCKET) Tem hash documento para enviar pro HSM!');
-                console.log(documentoBinario);
-                socket.write(documentoBinario);
+                socket.write(documentoBinario+'\n');
             }
                 
             socket.on('data', (data) => {

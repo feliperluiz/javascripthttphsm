@@ -32,8 +32,11 @@ function formatValues(value, type) {
 			return tmpStr;  
 		case Types.TEXT_STRING:
 			if (!isHex(value)) {
-				var hexbuf = new Buffer(value);
-				tmpStr = hexbuf.toString('hex');
+				
+				//var hexbuf = new Buffer(value);
+				//tmpStr = hexbuf.toString('hex');
+				var tmpBin = text2Binary(value);
+				tmpStr = parseInt(tmpBin, 2).toString(16);
 			} else {
 				tmpStr = value.toString(16);
 			}
@@ -43,6 +46,29 @@ function formatValues(value, type) {
 			return tmpStr;
 	}
 };
+
+function isMultiple(x, y) {
+	var remainder = x % y;
+	if (remainder != 0){
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function text2Binary(string) {
+    return string.split('').map(function (char) {
+        return char.charCodeAt(0).toString(2);
+    }).join(' ');
+}
+
+function convertToHex(str) {
+    var hex = '';
+    for(var i=0;i<str.length;i++) {
+        hex += ''+str.charCodeAt(i).toString(16);
+    }
+    return hex;
+}
 
 function ttlvPadding(type, value) {
 	var pad;
@@ -62,7 +88,7 @@ function ttlvPadding(type, value) {
 		} else {
 			var remainder = getByteLen(value) % 8;
 			var diff = 8 - remainder;
-			var byteBuff = new Buffer(diff).fill(0);
+			var byteBuff = new Array(diff).fill(0);
 			pad = byteBuff.toString('hex');
 		}
 		return pad;
@@ -122,7 +148,7 @@ function getFieldLength(type, value) {
 function getByteLen(normal_val) {
     // Force string type
     normal_val = String(normal_val);
-    var normal_buff = new Buffer(normal_val);
+    //var normal_buff = new Buffer(normal_val);
 
     var byteLen = 0;
     for (var i = 0; i < normal_val.length; i++) {
@@ -140,6 +166,11 @@ function getByteLen(normal_val) {
     //console.log('GetByteLen Long Math: ');
     //console.log(byteLen);
     return byteLen;
+}
+
+function isHex(h) {
+	var a = parseInt(h,16);
+	return (a.toString(16) === h)
 }
 
 function _getLength(value) {
