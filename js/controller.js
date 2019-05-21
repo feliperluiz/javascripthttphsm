@@ -53,16 +53,18 @@ var TTLVQueryFunction = new KMIPTTLV (Tags.QUERY_FUNCTION, Types.ENUMERATION, Qu
 
 
 function hexStringToByte(str) {
-  if (!str) {
-    return new Uint8Array();
-  }
+  // if (!str) {
+  //   return new Uint8Array();
+  // }
   
-  var a = [];
-  for (var i = 0, len = str.length; i < len; i+=2) {
-    a.push(parseInt(str.substr(i,2),16));
-  }
+  // var a = [];
+  // for (var i = 0, len = str.length; i < len; i+=2) {
+  //   a.push(parseInt(str.substr(i,2),16));
+  // }
   
-  return new Uint8Array(a);
+  // return new Uint8Array(a);
+  let key = Buffer.from(str, 'hex');
+  return key;
 }
 
 function byteToHexString(uint8arr) {
@@ -80,7 +82,7 @@ function byteToHexString(uint8arr) {
   return hexStr.toUpperCase();
 }
 
-var bin1 = hexStringToByte(TTLVRequest.getBlock()+
+var bin1 = TTLVRequest.getBlock()+
 TTLVHeader.getBlock()+
 TTLVProtocol.getBlock()+
 TTLVProtocolMajor.getBlock()+
@@ -95,7 +97,7 @@ TTLVHeaderBatch.getBlock()+
 TTLVBatchItem.getBlock()+
 TTLVItemOperation.getBlock()+
 TTLVRequestPayload.getBlock()+
-TTLVQueryFunction.getBlock());
+TTLVQueryFunction.getBlock();
 
 ws.onopen = function () {
   ws.send(bin1)

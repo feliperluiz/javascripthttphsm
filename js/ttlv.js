@@ -13,7 +13,6 @@ function KMIPTTLV (tag, type, value, length) {
 
 KMIPTTLV.prototype.getBlock = function()
 {
-	//example var TTLVRequest = new KMIPTTLV (Tags.REQUEST_MESSAGE, Types.STRUCTURE, '', 0x000001e8);
   return this.tag.toString(16) + '' + formatNumbers(this.type, 'type') + '' + formatNumbers(this.length, 'length') + '' + this.value + '' + this.padding;
 };
 
