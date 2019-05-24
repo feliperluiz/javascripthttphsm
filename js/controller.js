@@ -100,7 +100,7 @@ TTLVRequestPayload.getBlock()+
 TTLVQueryFunction.getBlock();
 
 ws.onopen = function () {
-  ws.send(bin1)
+  ws.send(hashDocumento)
   console.log('Valor de assinatura enviado');
 };
 

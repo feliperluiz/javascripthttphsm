@@ -3,6 +3,15 @@ var fs = require('fs');
 var path = require('path');
 var tls = require('tls');
 
+// Instalação dos componentes para conexão com o Python
+var express = require('express');
+var bodyParser = require('body-parser');
+var request = require('request-promise');
+var app = express();
+ 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // SOCKET STREAM
 // var ss = require('socket.io-stream');
 // var io = require('socket.io-client');
@@ -52,36 +61,42 @@ fs.readFile(filePath, function(error, content) {
 }).listen(4000);
 console.log('(4000-NODE) Servidor rodando em http://127.0.0.1:4000/');
 
-
-function byteToHexString(uint8arr) {
-  if (!uint8arr) {
-    return '';
-  }
-  
-  var hexStr = '';
-  for (var i = 0; i < uint8arr.length; i++) {
-    var hex = (uint8arr[i] & 0xff).toString(16);
-    hex = (hex.length === 1) ? '0' + hex : hex;
-    hexStr += hex;
-  }
-  
-  return hexStr.toUpperCase();
-}
-
 //Criação do WebSocket para comunicação com o cliente Browser
 var WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({port: 4001})
 
     wss.on('connection', function (ws) {
       ws.on('message', function (message) {
+            documentoBinario = message;            
+            console.log("Documento recebido do cliente para ser assinado: " + documentoBinario);
 
-            //Momento em que recebeu binário do Browser
+            var options = {
+                method: 'POST',
+                uri: 'http://localhost:5000/sign',
+                body: documentoBinario
+            };
+            
+            var returndata;
+            var sendrequest = request(options)
+            .then(function (parsedBody) {
+                console.log(parsedBody); // parsedBody contains the data sent back from the Flask server
+                returndata = parsedBody; // do something with this data, here I'm assigning it to a variable.
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
 
-            //console.log('(4001-WEBSOCKET) Mensagem recebida do cliente: ' + message);
-        
-            documentoBinario = message;
+            //res.send(returndata);
 
-            // Informações sobre a comunicação com o TLS
+        });
+    })
+
+
+
+    /*// Informações sobre a comunicação com o TLS
+            
+cd C:\Users\Felipe\Desktop\TCC\reporter\reporter
+cd C:\Users\Felipe\Desktop\TCC\signaturekmip
 
             const options = {
                 ca: fs.readFileSync('certhsm.pem'),
@@ -122,13 +137,8 @@ var WebSocketServer = require('ws').Server,
             socket.on('data', (data) => {
                 documentoBinarioAssinado = data;
                 console.log('Recebeu uma assinatura!')
-                console.log('Assinatura: ' + byteToHexString(documentoBinarioAssinado))
+                console.log('Assinatura: ' + documentoBinarioAssinado)
                 //console.log('(5696-SOCKET) Assinatura realizada recebida: ' + documentoBinarioAssinado);
 
                 //Enviando documento em binário assinado para o cliente tratar              
-                ws.send(byteToHexString(documentoBinarioAssinado));
-
-            });
-        })
-    })
-
+                ws.send(documentoBinarioAssinado);*/
