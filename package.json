@@ -22,9 +22,11 @@
   "homepage": "https://github.com/feliperluiz/signaturekmip#readme",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "bytes": "^3.1.0",
     "express": "^4.16.4",
     "file-system": "^2.2.2",
     "jquery": "^3.3.1",
+    "querystring": "^0.2.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "socket.io": "^2.2.0",
