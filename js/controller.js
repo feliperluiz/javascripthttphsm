@@ -16,7 +16,7 @@ function onChange(event) {
 function Sign () {  
 
   var xhr = new XMLHttpRequest();
-  var url = "https://hsmlab64.dinamonetworks.com/api/gen_rand";
+  var url = "https://hsmlab64.dinamonetworks.com/api/auth";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.onreadystatechange = function () {
@@ -25,7 +25,7 @@ function Sign () {
           console.log(json.email + ", " + json.password);
       }
   };
-  var data = JSON.stringify({"len": 16});
+  var data = JSON.stringify({"usr": "master", "pwd": "12345678"});
   xhr.send(data);
 
 //   var ws = new WebSocket('ws://localhost:4001');
