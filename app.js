@@ -68,13 +68,12 @@ var options = {
     headers: {
         'Content-Type': 'application/json',
         'Content-Length': dadoStr.length,
-        'Authorization': 'HSM 48D50D8E79ABBEFC5F711B4B517046B29E4F7D52229E1587DB570752E13A081A'
+        'Authorization': 'HSM EA90DCD52172616D33F8D4A1DABFAE70B158F8431DBCC880FF5D8B327503E816'
     }
 }; 
 
 var req = https.request(options, function(res) { 
     res.on('data', function(data) { 
-        console.log('passou aqui' + data)
         process.stdout.write(data); 
     }); 
 }); 
