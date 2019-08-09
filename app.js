@@ -56,7 +56,7 @@ var WebSocketServer = require('ws').Server,
     })
 
 var options = { 
-    hostname: 'hsmlab64.dinamonetworks.com',
+    hostname: 'hsmlab63.dinamonetworks.com',
     method: 'POST',
     port: 443,
     path: '/api/gen_rand',
