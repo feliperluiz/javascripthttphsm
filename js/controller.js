@@ -8,6 +8,7 @@ function Auth () {
       ws.send(true)
       ws.onmessage = function(dado) {
         console.log('Token: ' + dado.data);
+        alert('Token gerado no HSM: ' + dado.data);
       };
   };
 }
@@ -17,7 +18,8 @@ function GenerateRandom () {
     ws.onopen = function () {
       ws.send(16) //16 bytes aleatórios gerados
       ws.onmessage = function(dado) {
-        console.log('Número aleatório gerado: ' + dado.data);
+        console.log('Número aleatório: ' + dado.data);
+        alert('Número aleatório gerado no HSM: ' + dado.data);
       };
     };
 }

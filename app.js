@@ -55,10 +55,12 @@ var WebSocketServer = require('ws').Server,
             if (parseInt(message)) {
                 pathValue = '/api/gen_rand'
                 dadoStr = '{"len": '+message+'}'
+                console.log(dadoStr)
+                console.log(authToken)
                 headersObject = {
                     'Content-Type': 'application/json',
                     'Content-Length': dadoStr.length,
-                    'Authorization': 'HSM' + authToken
+                    'Authorization': 'HSM ' + authToken
                 }
             } else {
                 pathValue = '/api/auth'
