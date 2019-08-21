@@ -3,12 +3,11 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Assinatura digital de documentos</title>
+    <title>Autenticação e Comunicação com HTTP ao HSM</title>
 
   	<link rel="stylesheet" href="/public/bootstrap.css">
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="/webtcp/lib/client/webtcp-0.0.1.min.js"></script>     
-    <script src="/public/sha256.js"></script>
     <script src="/js/controller.js"></script>
 	</head>
 	
@@ -16,22 +15,28 @@
     <div class="jumbotron">
       <div class="container">
       	<br />
-        <h1>Assinatura digital de documentos</h1>
+        <h1>Autenticação e Comunicação ao HSM</h1>
         <p>
-        	Escolha o documento que você deseja assinar:
+        	Clique na ação desejada:
         </p>
         
 
-        <input type="file" id="input_file" onchange="onChange(event)" title="Clique aqui" />
 
       <br /> <br />       
-      <p> <a class="btn btn-primary btn-lg" id="sign" onclick="Sign()" role="button"> Assinar &raquo;</a> </p>
+      <p> 
+      	<a class="btn btn-primary btn-lg" id="auth" onclick="Auth()" role="button"> 
+      	Autenticar &raquo;
+      	</a>
+
+      	<a class="btn btn-primary btn-lg" id="random" onclick="GenerateRandom()" role="button"> Gerar Número Aleatório &raquo;
+      	</a> 
+      </p>
       </div>
     </div>
 
     <div class="container">     
       <footer>
-        <p>&copy; Trabalho de Conclusão de Curso desenvolvido por Felipe Rodrigues Luiz em 2018</p>
+        <p>&copy; Trabalho de Conclusão de Curso desenvolvido por Felipe Rodrigues Luiz em 2019</p>
       </footer>
     </div> 
     
