@@ -55,8 +55,6 @@ var WebSocketServer = require('ws').Server,
             if (parseInt(message)) {
                 pathValue = '/api/gen_rand'
                 dadoStr = '{"len": '+message+'}'
-                console.log(dadoStr)
-                console.log(authToken)
                 headersObject = {
                     'Content-Type': 'application/json',
                     'Content-Length': dadoStr.length,
@@ -77,9 +75,9 @@ var WebSocketServer = require('ws').Server,
                 port: 443,
                 path: pathValue,
                 passphrase: '12345678',
-                key: fs.readFileSync('./certsjson/lab.pri'), 
-                cert: fs.readFileSync('./certsjson/lab.cer'), 
-                ca: fs.readFileSync('./certsjson/hsm.cer'), 
+                key: fs.readFileSync('./lab.pri'), 
+                cert: fs.readFileSync('./lab.cer'), 
+                ca: fs.readFileSync('./hsm.cer'), 
                 rejectUnauthorized: false,
                 headers: headersObject
             }; 
@@ -90,9 +88,8 @@ var WebSocketServer = require('ws').Server,
                     if (resposta.token !== undefined) {
                         authToken = resposta.token
                         respostaWeb = authToken
-                        console.log('Passou na resposta do token: ' + respostaWeb)
+                        console.log('Resposta do token: ' + respostaWeb)
                     } else {
-                        console.log(resposta)
                         respostaWeb = resposta.rnd
                         console.log('Resposta do numero aleatorio: ' + respostaWeb)                     
                     }
