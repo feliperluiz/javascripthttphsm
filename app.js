@@ -105,15 +105,5 @@ var WebSocketServer = require('ws').Server,
             }); 
             req.write(dadoStr);
             req.end();
-        });
-
-        
+        });  
     })
-
-
-
-
-
-
-//{ "token":  "48D50D8E79ABBEFC5F711B4B517046B29E4F7D52229E1587DB570752E13A081A" , "cid": 935639491, "pwd_expired": 0}
-// { "rnd": "D98A09FFF997DB8197EFB67CDC23E142"}
